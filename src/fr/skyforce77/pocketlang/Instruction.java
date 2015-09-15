@@ -32,10 +32,11 @@ public enum Instruction {
 	POP_BUFFER("kyogre", "kyogre", "kyogre"),
 	CLEAR_BUFFER("porygon2", "porygon2", "porygon2"),
 	
+	DISPLAY_MESSAGE_BUFFER_POPUP("ramboum", "loudred", "dogoomu"),
+	
 	/* TODO */
 	
-	CREATE_MESSAGE_BUFFER_POPUP("ramboum", "loudred", "dogoomu"),
-	CREATE_PROMPT_BUFFER_POPUP("brouhabam", "exploud", "bakuong"),
+	DISPLAY_PROMPT_BUFFER_POPUP("brouhabam", "exploud", "bakuong"),
 	
 	DISPLAY_IMAGE_BUFFER("zorua", "zorua", "zorua"),
 	DISPLAY_IMAGE_URL_BUFFER("zoroark", "zoroark", "zoroark"),

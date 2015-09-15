@@ -14,6 +14,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
+import javax.swing.JOptionPane;
 
 public class PocketLang {
     
@@ -180,6 +181,12 @@ public class PocketLang {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else if(inst.equals(Instruction.DISPLAY_MESSAGE_BUFFER_POPUP)) {
+					String text = "";
+					for(Integer i : buffer) {
+						text += (char)(int)i;
+					}
+					JOptionPane.showMessageDialog(null, text);
 				}
 			}
 			at++;
