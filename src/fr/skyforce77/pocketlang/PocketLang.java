@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.sound.midi.MidiSystem;
@@ -18,6 +19,7 @@ public class PocketLang {
     
 	private static int pointer = 0;
 	private static int[] bytes = new int[30000];
+	private static ArrayList<Integer> buffer = new ArrayList<Integer>();
 	
 	public static void main(String[] args) {
 		if(args[0].equals("run")) {
@@ -122,6 +124,20 @@ public class PocketLang {
 						bytes[pointer]--;
 					else
 						bytes[pointer] = 255;
+				} else if(inst.equals(Instruction.CLEAR_VALUE)) {
+					bytes[pointer] = 0;
+				} else if(inst.equals(Instruction.PUSH_BUFFER)) {
+					buffer.add(bytes[pointer]);
+				} else if(inst.equals(Instruction.POP_BUFFER)) {
+					if(buffer.size() != 0) {
+						int index = (int)(buffer.size()-1);
+						bytes[pointer] = buffer.get(index);
+						buffer.remove(index);
+					} else {
+						bytes[pointer] = 0;
+					}
+				} else if(inst.equals(Instruction.CLEAR_BUFFER)) {
+					buffer.clear();
 				} else if(inst.equals(Instruction.OUTPUT_CHAR)) {
 					System.out.print((char)bytes[pointer]);
 				} else if(inst.equals(Instruction.INPUT_CHAR)) {
