@@ -193,6 +193,7 @@ public class PocketLang {
 						text += (char)(int)i;
 					}
 					String result = JOptionPane.showInputDialog(null, text.equals("") ? "Input requested" : text);
+					buffer.clear();
 					for(Byte i : result.getBytes()) {
 						buffer.add((int)(char)(byte)i);
 					}
