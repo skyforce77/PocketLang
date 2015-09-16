@@ -187,6 +187,15 @@ public class PocketLang {
 						text += (char)(int)i;
 					}
 					JOptionPane.showMessageDialog(null, text);
+				} else if(inst.equals(Instruction.DISPLAY_PROMPT_BUFFER_POPUP)) {
+					String text = "";
+					for(Integer i : buffer) {
+						text += (char)(int)i;
+					}
+					String result = JOptionPane.showInputDialog(null, text.equals("") ? "Input requested" : text);
+					for(Byte i : result.getBytes()) {
+						buffer.add((int)(char)(byte)i);
+					}
 				}
 			}
 			at++;

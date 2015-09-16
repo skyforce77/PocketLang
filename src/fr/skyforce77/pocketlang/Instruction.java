@@ -33,10 +33,9 @@ public enum Instruction {
 	CLEAR_BUFFER("porygon2", "porygon2", "porygon2"),
 	
 	DISPLAY_MESSAGE_BUFFER_POPUP("ramboum", "loudred", "dogoomu"),
+	DISPLAY_PROMPT_BUFFER_POPUP("brouhabam", "exploud", "bakuong"),
 	
 	/* TODO */
-	
-	DISPLAY_PROMPT_BUFFER_POPUP("brouhabam", "exploud", "bakuong"),
 	
 	DISPLAY_IMAGE_BUFFER("zorua", "zorua", "zorua"),
 	DISPLAY_IMAGE_URL_BUFFER("zoroark", "zoroark", "zoroark"),
