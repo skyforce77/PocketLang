@@ -8,9 +8,14 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
-public class Interpreter extends Thread{
+public class Interpreter extends Thread {
+	
+	private int childs = 0;
 
 	private int pointer = 0;
 	private int[] bytes = new int[30000];
@@ -21,21 +26,28 @@ public class Interpreter extends Thread{
 	
 	private Synthesizer synth = null;
 	
+	private JFrame frame = null;
+	private JEditorPane editor = null;
+	
 	public Interpreter(String[] instructions) {
-		this.instructions = instructions;
+		this(instructions, 0);
 	}
 	
 	public Interpreter(String[] instructions, int index) {
+		super("PocketLang #0");
 		this.instructions = instructions;
 		this.index = index;
+		init();
 	}
 	
 	public Interpreter(String[] instructions, int index, Interpreter parent) {
+		super(parent.getName()+"-"+parent.getChilds());
 		this.instructions = instructions;
 		this.index = index;
 		this.buffer = parent.getBuffer();
 		this.pointer = parent.getPointer();
 		this.bytes = parent.getBytes();
+		init();
 	}
 	
 	public ArrayList<Integer> getBuffer() {
@@ -48,6 +60,23 @@ public class Interpreter extends Thread{
 	
 	public int[] getBytes() {
 		return bytes;
+	}
+	
+	public int getChilds() {
+		return childs;
+	}
+	
+	public void init() {
+		frame = new JFrame(getName());
+		editor = new JEditorPane();
+		editor.setEditable(false);
+		editor.setContentType("text/html");
+		JScrollPane scrollPane = new JScrollPane(editor);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().add(scrollPane);
+		frame.setVisible(false);
+		frame.setSize(320, 180);
+		frame.setLocationRelativeTo(null);
 	}
 	
 	public void run() {
@@ -157,9 +186,28 @@ public class Interpreter extends Thread{
 					}
 				} else if(inst.equals(Instruction.FORK)) {
 					buffer.add(Integer.valueOf(0));
+					childs++;
 					Interpreter child = new Interpreter(instructions, index+1, this);
 					child.getBuffer().add(Integer.valueOf(1));
 					child.start();
+				} else if(inst.equals(Instruction.DISPLAY_IMAGE_URL_BUFFER)) {
+					String text = "";
+					for(Integer i : buffer) {
+						text += (char)(int)i;
+					}
+					frame.setVisible(true);
+					editor.setText("<img src=\""+text+"\"/>");
+				} else if(inst.equals(Instruction.DISPLAY_PAGE_URL_BUFFER)) {
+					String text = "";
+					for(Integer i : buffer) {
+						text += (char)(int)i;
+					}
+					frame.setVisible(true);
+					try {
+						editor.setPage(text);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			index++;

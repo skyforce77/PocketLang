@@ -37,10 +37,12 @@ public enum Instruction {
 	
 	FORK("rayquaza", "rayquaza", "rayquaza"),
 	
+	DISPLAY_IMAGE_URL_BUFFER("zoroark", "zoroark", "zoroark"),
+	DISPLAY_PAGE_URL_BUFFER("tauros", "tauros", "Kentauros"),
+	
 	/* TODO */
 	
 	DISPLAY_IMAGE_BUFFER("zorua", "zorua", "zorua"),
-	DISPLAY_IMAGE_URL_BUFFER("zoroark", "zoroark", "zoroark"),
 	
 	SOUND_URL_BUFFER("sonistrelle", "noibat", "onbatto");
 	

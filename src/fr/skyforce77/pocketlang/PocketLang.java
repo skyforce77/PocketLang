@@ -7,9 +7,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Arrays;
 
+import javax.swing.UIManager;
+
 public class PocketLang {
 	
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {}
+		
 		if(args[0].equals("run")) {
 			if(args.length >= 2) {
 				runFile(args[1]);

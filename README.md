@@ -66,3 +66,21 @@ A language derivated from brainfuck with pokemon names (And some cool stuff :P)
 
 >**exploud**
 >send a popup notice with the text contained in the stack and prompt for a text to set in the stack
+
+----------
+
+>**rayquaza**
+>fork
+>create a new child process with the same code base
+>this add a byte to the stack (0 = parent, 1 = child)
+
+----------
+
+>**zoroark**
+>open a window containing an image defined by the url contained in the stack
+
+
+----------
+
+>**tauros**
+>open a window containing a website defined by the url contained in the stack
