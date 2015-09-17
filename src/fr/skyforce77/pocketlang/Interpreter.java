@@ -30,6 +30,26 @@ public class Interpreter extends Thread{
 		this.index = index;
 	}
 	
+	public Interpreter(String[] instructions, int index, Interpreter parent) {
+		this.instructions = instructions;
+		this.index = index;
+		this.buffer = parent.getBuffer();
+		this.pointer = parent.getPointer();
+		this.bytes = parent.getBytes();
+	}
+	
+	public ArrayList<Integer> getBuffer() {
+		return buffer;
+	}
+	
+	public int getPointer() {
+		return pointer;
+	}
+	
+	public int[] getBytes() {
+		return bytes;
+	}
+	
 	public void run() {
 		try {
 			synth = MidiSystem.getSynthesizer();
@@ -129,10 +149,17 @@ public class Interpreter extends Thread{
 						text += (char)(int)i;
 					}
 					String result = JOptionPane.showInputDialog(null, text.equals("") ? "Input requested" : text);
+					if(result == null)
+						result = "";
 					buffer.clear();
 					for(Byte i : result.getBytes()) {
 						buffer.add((int)(char)(byte)i);
 					}
+				} else if(inst.equals(Instruction.FORK)) {
+					buffer.add(Integer.valueOf(0));
+					Interpreter child = new Interpreter(instructions, index+1, this);
+					child.getBuffer().add(Integer.valueOf(1));
+					child.start();
 				}
 			}
 			index++;

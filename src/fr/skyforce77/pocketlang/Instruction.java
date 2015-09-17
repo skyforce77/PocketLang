@@ -35,6 +35,8 @@ public enum Instruction {
 	DISPLAY_MESSAGE_BUFFER_POPUP("ramboum", "loudred", "dogoomu"),
 	DISPLAY_PROMPT_BUFFER_POPUP("brouhabam", "exploud", "bakuong"),
 	
+	FORK("rayquaza", "rayquaza", "rayquaza"),
+	
 	/* TODO */
 	
 	DISPLAY_IMAGE_BUFFER("zorua", "zorua", "zorua"),
