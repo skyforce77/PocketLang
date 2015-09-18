@@ -38,13 +38,9 @@ public enum Instruction {
 	FORK("rayquaza", "rayquaza", "rayquaza"),
 	
 	DISPLAY_IMAGE_URL_BUFFER("zoroark", "zoroark", "zoroark"),
-	DISPLAY_PAGE_URL_BUFFER("tauros", "tauros", "Kentauros"),
 	
-	/* TODO */
-	
-	DISPLAY_IMAGE_BUFFER("zorua", "zorua", "zorua"),
-	
-	SOUND_URL_BUFFER("sonistrelle", "noibat", "onbatto");
+	DISPLAY_PAGE_URL_BUFFER("tauros", "tauros", "kentauros"),
+	DISPLAY_PAGE_BUFFER("frison", "bouffalant", "baffuron");
 	
 	private List<String> as;
 	private char brainfuck = 0x00;

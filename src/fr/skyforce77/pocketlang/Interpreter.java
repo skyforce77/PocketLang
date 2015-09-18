@@ -1,5 +1,6 @@
 package fr.skyforce77.pocketlang;
 
+import java.awt.HeadlessException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -14,34 +15,34 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 public class Interpreter extends Thread {
-	
-	private int childs = 0;
+
+	private static int lastId = 0;
 
 	private int pointer = 0;
 	private int[] bytes = new int[30000];
 	private ArrayList<Integer> buffer = new ArrayList<Integer>();
-	
+
 	private String[] instructions = null;
 	private int index = 0;
-	
+
 	private Synthesizer synth = null;
-	
+
 	private JFrame frame = null;
 	private JEditorPane editor = null;
-	
+
 	public Interpreter(String[] instructions) {
 		this(instructions, 0);
 	}
-	
+
 	public Interpreter(String[] instructions, int index) {
 		super("PocketLang #0");
 		this.instructions = instructions;
 		this.index = index;
 		init();
 	}
-	
+
 	public Interpreter(String[] instructions, int index, Interpreter parent) {
-		super(parent.getName()+"-"+parent.getChilds());
+		super(parent.getName()+"-"+parent.getLastUsedId());
 		this.instructions = instructions;
 		this.index = index;
 		this.buffer = parent.getBuffer();
@@ -49,36 +50,40 @@ public class Interpreter extends Thread {
 		this.bytes = parent.getBytes();
 		init();
 	}
-	
+
 	public ArrayList<Integer> getBuffer() {
 		return buffer;
 	}
-	
+
 	public int getPointer() {
 		return pointer;
 	}
-	
+
 	public int[] getBytes() {
 		return bytes;
 	}
-	
-	public int getChilds() {
-		return childs;
+
+	public int getLastUsedId() {
+		return lastId;
 	}
-	
+
 	public void init() {
-		frame = new JFrame(getName());
-		editor = new JEditorPane();
-		editor.setEditable(false);
-		editor.setContentType("text/html");
-		JScrollPane scrollPane = new JScrollPane(editor);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(scrollPane);
-		frame.setVisible(false);
-		frame.setSize(320, 180);
-		frame.setLocationRelativeTo(null);
+		try {
+			frame = new JFrame(getName());
+			editor = new JEditorPane();
+			editor.setEditable(false);
+			editor.setContentType("text/html");
+			JScrollPane scrollPane = new JScrollPane(editor);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.getContentPane().add(scrollPane);
+			frame.setVisible(false);
+			frame.setSize(320, 180);
+			frame.setLocationRelativeTo(null);
+		} catch(HeadlessException e) {
+			System.out.println("You are running PocketLang in headlessmode, some functions will not be supported");
+		}
 	}
-	
+
 	public void run() {
 		try {
 			synth = MidiSystem.getSynthesizer();
@@ -86,7 +91,7 @@ public class Interpreter extends Thread {
 		} catch (MidiUnavailableException e) {
 			e.printStackTrace();
 		}
-		
+
 		while(index < instructions.length) {
 			Instruction inst = Instruction.fromString(instructions[index]);
 			if(inst != null) {
@@ -160,9 +165,9 @@ public class Interpreter extends Thread {
 				} else if(inst.equals(Instruction.SYNTHESIZER)) {
 					try {
 						ShortMessage myMsg = new ShortMessage();
-					    myMsg.setMessage(ShortMessage.NOTE_ON, ((bytes[pointer] & 0x80) == 128) ? 9 : 4, bytes[pointer] & 0x7F, 90); 
-					    Receiver synthRcvr = synth.getReceiver();
-					    synthRcvr.send(myMsg, -1);
+						myMsg.setMessage(ShortMessage.NOTE_ON, ((bytes[pointer] & 0x80) == 128) ? 9 : 4, bytes[pointer] & 0x7F, 90); 
+						Receiver synthRcvr = synth.getReceiver();
+						synthRcvr.send(myMsg, -1);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -186,7 +191,7 @@ public class Interpreter extends Thread {
 					}
 				} else if(inst.equals(Instruction.FORK)) {
 					buffer.add(Integer.valueOf(0));
-					childs++;
+					lastId++;
 					Interpreter child = new Interpreter(instructions, index+1, this);
 					child.getBuffer().add(Integer.valueOf(1));
 					child.start();
@@ -195,23 +200,42 @@ public class Interpreter extends Thread {
 					for(Integer i : buffer) {
 						text += (char)(int)i;
 					}
-					frame.setVisible(true);
-					editor.setText("<img src=\""+text+"\"/>");
+					if(frame != null) {
+						frame.setVisible(true);
+						editor.setText("<img src=\""+text+"\"/>");
+					} else {
+						System.out.println("Image display: "+text);
+					}
 				} else if(inst.equals(Instruction.DISPLAY_PAGE_URL_BUFFER)) {
 					String text = "";
 					for(Integer i : buffer) {
 						text += (char)(int)i;
 					}
-					frame.setVisible(true);
-					try {
-						editor.setPage(text);
-					} catch (IOException e) {
-						e.printStackTrace();
+					if(frame != null) {
+						frame.setVisible(true);
+						try {
+							editor.setPage(text);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					} else {
+						System.out.println("Page display: "+text);
+					}
+				} else if(inst.equals(Instruction.DISPLAY_PAGE_BUFFER)) {
+					String text = "";
+					for(Integer i : buffer) {
+						text += (char)(int)i;
+					}
+					if(frame != null) {
+						frame.setVisible(true);
+						editor.setText(text);
+					} else {
+						System.out.println("Page display: "+text);
 					}
 				}
 			}
 			index++;
 		}
 	}
-	
+
 }

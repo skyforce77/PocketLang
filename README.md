@@ -84,3 +84,8 @@ A language derivated from brainfuck with pokemon names (And some cool stuff :P)
 
 >**tauros**
 >open a window containing a website defined by the url contained in the stack
+
+----------
+
+>**bouffalant**
+>open a window containing a website defined by the html code contained in the stack
